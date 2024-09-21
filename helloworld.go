@@ -9,7 +9,8 @@ The following commmands are useful with curl:
 
 The following APIs are implemented in this pgrm:
 - GET (Client issues a GET request to the server and receives the document asked for)
-- POST 
+- POST (Puts file specified on system)
+- DELETE (Remove file off of system)
 - PUT * to be done*
 
 */
@@ -37,6 +38,17 @@ func xget(w http.ResponseWriter, r *http.Request){
 	w.Write(content)
 }
 
+func xdelete(w http.ResponseWriter, r *http.Request){
+	path:= r.URL.Path
+	parts:= strings.Split(path, "/")
+
+	filename := parts[2]
+	e := os.Remove(filename)
+	if e != nil{
+		return
+	}
+}
+
 func xpost(w http.ResponseWriter, r *http.Request){
 	path:= r.URL.Path
 	parts := strings.Split(path, "/")
@@ -59,7 +71,7 @@ func xpost(w http.ResponseWriter, r *http.Request){
 
 
 func main(){
-	http.HandleFunc("/rkavi/", xpost)
+	http.HandleFunc("/rkavi/", xdelete)
 	fmt.Println("Server is running on port 8081...")
 	http.ListenAndServe(":8081", nil)
 }
